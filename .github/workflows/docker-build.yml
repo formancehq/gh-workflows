@@ -1,0 +1,63 @@
+name: Build Docker & push to Staging
+
+on:
+  workflow_call:
+    inputs:
+      service:
+        required: true
+        type: string
+      env:
+        required: true
+        type: string
+      sha:
+        required: true
+        type: string
+      version:
+        required: true
+        type: string
+    secrets:
+      GITHUB_TOKEN:
+        required: true
+
+jobs:
+  build:
+    name: Build Docker for Staging
+    permissions:
+      id-token: write
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Install Task
+        uses: arduino/setup-task@v1
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: '1.16'
+      - name: Configure git for private modules
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: git config --global url."https://numarybot:${TOKEN}@github.com".insteadOf "https://github.com"
+      - name: "Task: Run CI"
+        run: task ci
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: eu-west-1
+          role-to-assume: arn:aws:iam::955332203423:role/github-access
+          role-duration-seconds: 3600
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+      - name: "Task: Build Docker image"
+        run: task build
+        env:
+          TASK_SERVICE: ${{ input.service }}
+          TASK_APP_SHA: ${{ input.sha }}
+          TASK_APP_VERSION: ${{ input.version }}
+
+      - name: "Task: Push Docker image"
+        run: task push-${{ input.env }}
