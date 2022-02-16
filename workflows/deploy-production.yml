@@ -1,0 +1,30 @@
+name: Deploy Service in Production
+
+on:
+  workflow_call:
+    inputs:
+      service:
+        required: true
+        type: string
+      version:
+        required: true
+        type: string
+    secrets:
+      ARGOCD_TOKEN:
+        required: true
+
+jobs:
+  k8s:
+    name: Deploy in Staging
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install ArgoCD
+          run: |
+            curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+            chmod +x /usr/local/bin/argocd
+      - name: Login to ArgoCD
+        run: argocd login argocd.prod.numary.cloud --insecure --username github_action --password ${{ secrets.ARGOCD_TOKEN }}
+      - name: Change image in ArgoCD
+        run: argocd app set production-${{ inputs.service }} -p image.tag=${{ inputs.version }}
+      - name: 🚀 Deploy Ledger
+        run: argocd app sync production-${{ inputs.service }} --prune
