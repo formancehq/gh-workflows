@@ -1,0 +1,45 @@
+name: Build Docker & push to Staging
+
+on:
+  workflow_call:
+    inputs:
+      go_version:
+        required: true
+        type: string
+        default: 1.16
+    secrets:
+      NUMARY_GITHUB_TOKEN:
+        required: true
+
+jobs:
+  build:
+    name: Build Docker for Staging
+    permissions:
+      id-token: write
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Task
+        uses: arduino/setup-task@v1
+      - uses: actions/setup-go@v2
+        with:
+          go-version: ${{ inputs.go_version }}
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+      - name: Configure git for private modules
+        env:
+          TOKEN: ${{ secrets.NUMARY_GITHUB_TOKEN }}
+        run: git config --global url."https://numarybot:${TOKEN}@github.com".insteadOf "https://github.com"
+      - name: Add GoPrivate
+        run: go env -w GOPRIVATE=github.com/numary/go-libs-cloud
+      - name: get deps
+        run: go mod download
+      - name: run tests
+        run: task tests
