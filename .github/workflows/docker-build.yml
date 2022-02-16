@@ -55,9 +55,9 @@ jobs:
       - name: "Task: Build Docker image"
         run: task build
         env:
-          TASK_SERVICE: ${{ input.service }}
-          TASK_APP_SHA: ${{ input.sha }}
-          TASK_APP_VERSION: ${{ input.version }}
+          TASK_SERVICE: ${{ inputs.service }}
+          TASK_APP_SHA: ${{ inputs.sha }}
+          TASK_APP_VERSION: ${{ inputs.version }}
 
       - name: "Task: Push Docker image"
-        run: task push-${{ input.env }}
+        run: task push-${{ inputs.env }}
