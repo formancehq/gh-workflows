@@ -57,7 +57,7 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
       - name: "Task: Build Docker image"
-        run: task build
+        run: task build APP_SHA=${TASK_APP_SHA} APP_VERSION=${TASK_APP_VERSION} APP_SERVICE=${TASK_SERVICE}
         env:
           TASK_SERVICE: ${{ inputs.service }}
           TASK_APP_SHA: ${{ inputs.sha }}

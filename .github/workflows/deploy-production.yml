@@ -26,5 +26,5 @@ jobs:
         run: argocd login argocd.prod.numary.cloud --insecure --username github_action --password ${{ secrets.ARGOCD_TOKEN }}
       - name: Change image in ArgoCD
         run: argocd app set production-${{ inputs.service }} -p image.tag=${{ inputs.version }}
-      - name: 🚀 Deploy Ledger
+      - name: 🚀 Deploy ${{ inputs.service }}
         run: argocd app sync production-${{ inputs.service }} --prune
