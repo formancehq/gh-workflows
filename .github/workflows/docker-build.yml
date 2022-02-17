@@ -47,11 +47,19 @@ jobs:
         run: git config --global url."https://numarybot:${TOKEN}@github.com".insteadOf "https://github.com"
       - name: "Task: Run CI"
         run: task ci
-      - name: Configure AWS credentials
+      - name: Configure AWS credentials for staging
+        if: ${{ github.event.inputs.env != 'prod' }}
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-region: eu-west-1
           role-to-assume: arn:aws:iam::955332203423:role/github-access
+          role-duration-seconds: 3600
+      - name: Configure AWS credentials for production
+        if: ${{ github.event.inputs.env == 'prod' }}
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: eu-west-1
+          role-to-assume: arn:aws:iam::288350113309:role/github-access
           role-duration-seconds: 3600
       - name: Login to Amazon ECR
         id: login-ecr
