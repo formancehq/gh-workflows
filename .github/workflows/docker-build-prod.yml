@@ -1,4 +1,4 @@
-name: Build Docker & push to Staging
+name: Build Docker & push to Production
 
 on:
   workflow_call:
