@@ -28,6 +28,6 @@ jobs:
         run: |
           argocd app patch production-${{ inputs.service }} --patch '{"spec": { "source": { "targetRevision": "${{ inputs.version }}" } }}' --type merge
       - name: Change image in ArgoCD
-        run: argocd app set production-${{ inputs.service }} -p image.tag=${{ inputs.version }}
+        run: argocd app set production-${{ inputs.service }} -p image.tag=${{ inputs.service }}-${{ inputs.version }}
       - name: 🚀 Deploy ${{ inputs.service }}
         run: argocd app sync production-${{ inputs.service }} --prune
