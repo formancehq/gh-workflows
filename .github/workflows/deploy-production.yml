@@ -26,7 +26,7 @@ jobs:
         run: argocd login argocd.prod.numary.cloud --insecure --username github_action --password ${{ secrets.ARGOCD_TOKEN }}
       - name: Switch branch for ArgoCD
         run: |
-          argocd app patch ${{ inputs.service }} --patch '{"spec": { "source": { "targetRevision": ${{ inputs.version }} } }}' --type merge
+          argocd app patch production-${{ inputs.service }} --patch '{"spec": { "source": { "targetRevision": ${{ inputs.version }} } }}' --type merge
       - name: Change image in ArgoCD
         run: argocd app set production-${{ inputs.service }} -p image.tag=${{ inputs.version }}
       - name: 🚀 Deploy ${{ inputs.service }}
