@@ -25,7 +25,7 @@ on:
 
 jobs:
   build:
-    name: Build Docker for Staging
+    name: Build Docker for Production
     permissions:
       id-token: write
       contents: write
