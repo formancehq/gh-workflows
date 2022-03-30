@@ -1,4 +1,4 @@
-name: Launch Infracost on Staging
+name: Launch Terraform
 
 on:
   workflow_call:
