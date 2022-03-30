@@ -17,7 +17,7 @@ jobs:
       pull-requests: write
     env:
       working-directory: .cloud/ressources
-      TF_WORKSPACE: "staging"
+      TF_WORKSPACE: ${{ secrets.TF_WORKSPACE }}
     name: Run Infracost
     steps:
       - name: Check out repository
@@ -35,9 +35,6 @@ jobs:
           role-duration-seconds: 3600
       - name: Terraform init
         run: terraform init
-        working-directory: ${{ env.working-directory }}
-      - name: Terraform workspace
-        run: terraform workspace select ${{ secrets.TF_WORKSPACE }}
         working-directory: ${{ env.working-directory }}
       - name: Terraform apply
         run: terraform apply -var-file ./tfvars/terraform.${{ secrets.TF_WORKSPACE }}.tfvars -auto-approve

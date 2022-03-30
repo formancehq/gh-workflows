@@ -36,9 +36,6 @@ jobs:
       - name: Terraform init
         run: terraform init
         working-directory: ${{ env.working-directory }}
-      - name: Terraform workspace
-        run: terraform workspace select ${{ env.TF_WORKSPACE }}
-        working-directory: ${{ env.working-directory }}
       - name: Terraform plan
         run: terraform plan -var-file ./tfvars/terraform.staging.tfvars -out tfplan.binary
         working-directory: ${{ env.working-directory }}
