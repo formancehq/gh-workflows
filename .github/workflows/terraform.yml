@@ -5,6 +5,8 @@ on:
     secrets:
       TERRAFORM_CLOUD_TOKEN:
         required: true
+      TF_WORKSPACE:
+        required: true
 
 jobs:
   infracost:
