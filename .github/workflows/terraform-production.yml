@@ -1,0 +1,47 @@
+name: Launch Terraform
+
+on:
+  workflow_call:
+    secrets:
+      TERRAFORM_CLOUD_TOKEN:
+        required: true
+      TF_WORKSPACE:
+        required: true
+      TAILSCALE_AUTHKEY:
+        required: true
+
+jobs:
+  infracost:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
+      pull-requests: write
+    env:
+      working-directory: .cloud/ressources
+      TF_WORKSPACE: ${{ secrets.TF_WORKSPACE }}
+    name: Run Terraform
+    steps:
+      - name: Tailscale
+        uses: tailscale/github-action@v1
+        with:
+          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+      - name: Check out repository
+        uses: actions/checkout@v2
+      - name: Install terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_wrapper: false # This is recommended so the `terraform show` command outputs valid JSON
+          cli_config_credentials_token: ${{ secrets.TERRAFORM_CLOUD_TOKEN }}
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: eu-west-1
+          role-to-assume: arn:aws:iam::288350113309:role/github-access
+          role-duration-seconds: 3600
+      - name: Terraform init
+        run: terraform init
+        working-directory: ${{ env.working-directory }}
+      - name: Terraform apply
+        run: terraform apply -var-file ./tfvars/terraform.${{ secrets.TF_WORKSPACE }}.tfvars -auto-approve
+        working-directory: ${{ env.working-directory }}
