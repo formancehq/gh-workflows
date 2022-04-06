@@ -7,6 +7,8 @@ on:
         required: true
       TF_WORKSPACE:
         required: true
+      TAILSCALE_AUTHKEY:
+        required: true
 
 jobs:
   infracost:
@@ -20,10 +22,10 @@ jobs:
       TF_WORKSPACE: ${{ secrets.TF_WORKSPACE }}
     name: Run Terraform
     steps:
-#      - name: Tailscale
-#        uses: tailscale/github-action@v1
-#        with:
-#          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+      - name: Tailscale
+        uses: tailscale/github-action@v1
+        with:
+          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
       - name: Check out repository
         uses: actions/checkout@v2
       - name: Install terraform
