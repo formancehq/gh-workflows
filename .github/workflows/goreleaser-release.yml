@@ -1,6 +1,11 @@
 name: GoReleaser Release
 on:
-  workflow_call
+  workflow_call:
+    secrets:
+      NUMARY_GITHUB_TOKEN:
+        required: true
+      FURY_TOKEN:
+        required: true
 
 jobs:
   build:
