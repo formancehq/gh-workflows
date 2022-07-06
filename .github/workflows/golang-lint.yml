@@ -1,4 +1,4 @@
-name: Tests
+name: Ling
 on:
   workflow_call:
     inputs:
@@ -9,16 +9,15 @@ on:
 
 jobs:
   build:
-    name: Tests
+    name: Lint
     runs-on: ubuntu-latest
     steps:
-      - name: Install Task
-        uses: arduino/setup-task@v1
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v3
         with:
           go-version: ${{ inputs.go_version }}
           cache: true
-      - run: go mod download
-      - name: run tests
-        run: task tests
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v3
+        with:
+          version: latest
