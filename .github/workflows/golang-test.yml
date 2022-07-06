@@ -1,0 +1,27 @@
+name: Tests
+on:
+  workflow_call:
+    inputs:
+      go_version:
+        required: false
+        type: string
+        default: 1.18
+    secrets:
+      NUMARY_GITHUB_TOKEN:
+        required: true
+
+jobs:
+  build:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Task
+        uses: arduino/setup-task@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
+        with:
+          go-version: ${{ inputs.go_version }}
+          cache: true
+      - run: go mod download
+      - name: run tests
+        run: task tests
