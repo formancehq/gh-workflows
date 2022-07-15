@@ -1,0 +1,40 @@
+name: Tests
+on:
+  workflow_call:
+    inputs:
+      go_version:
+        required: false
+        type: string
+        default: 1.18
+
+jobs:
+  build:
+    name: Tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:13-alpine
+        env:
+          POSTGRES_USER: numary
+          POSTGRES_PASSWORD: numary
+          POSTGRES_DB: numary
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Install Task
+        uses: arduino/setup-task@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
+        with:
+          go-version: ${{ inputs.go_version }}
+          cache: true
+      - run: go mod download
+      - name: run tests
+        run: task tests
+      - name: Upload coverage to Codecov
+        run: bash <(curl -s https://codecov.io/bash)
