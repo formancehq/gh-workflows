@@ -1,20 +1,13 @@
 name: Lint
-on:
-  workflow_call:
-    inputs:
-      go-version:
-        required: false
-        type: string
-        default: 1.18
 
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - uses: actions/setup-go@v3
         with:
-          go-version: ${{ inputs.go-version }}
-      - uses: actions/checkout@v3
+          go-version-file: 'go.mod'
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v3
         with:
