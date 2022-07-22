@@ -1,18 +1,17 @@
-name: Tests
+name: Tests - Postgres
 on:
   workflow_call:
 
 jobs:
-  build:
-    name: Tests
+  tests-postgres:
     runs-on: ubuntu-latest
     services:
       postgres:
         image: postgres:14-alpine
         env:
-          POSTGRES_USER: numary
-          POSTGRES_PASSWORD: numary
-          POSTGRES_DB: numary
+          POSTGRES_USER: ledger
+          POSTGRES_PASSWORD: ledger
+          POSTGRES_DB: ledger
         ports:
           - 5432:5432
         options: >-
@@ -30,5 +29,8 @@ jobs:
           cache: true
       - name: Run tests
         run: task tests
+        env:
+          NUMARY_STORAGE_DRIVER: "postgres"
+          NUMARY_STORAGE_POSTGRES_CONN_STRING: "postgresql://ledger:ledger@127.0.0.1/ledger"
       - name: Upload coverage to Codecov
         run: bash <(curl -s https://codecov.io/bash)
