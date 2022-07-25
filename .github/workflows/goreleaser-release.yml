@@ -1,9 +1,11 @@
 name: GoReleaser Release
 on:
   workflow_call:
-    go_version:
-      required: false
-      type: string
+    inputs:
+      go_version:
+        required: false
+        type: string
+        default: 1.18
     secrets:
       NUMARY_GITHUB_TOKEN:
         required: true

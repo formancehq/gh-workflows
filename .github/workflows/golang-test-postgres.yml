@@ -1,9 +1,11 @@
 name: Tests - Postgres
 on:
   workflow_call:
-    go_version:
-      required: false
-      type: string
+    inputs:
+      go_version:
+        required: false
+        type: string
+        default: 1.18
 
 jobs:
   tests-postgres:
