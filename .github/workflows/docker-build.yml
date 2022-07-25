@@ -15,6 +15,9 @@ on:
       version:
         required: true
         type: string
+      go_version:
+        required: false
+        type: string
     secrets:
       NUMARY_GITHUB_TOKEN:
         required: true

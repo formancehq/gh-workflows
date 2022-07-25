@@ -1,6 +1,9 @@
 name: GoReleaser Release
 on:
   workflow_call:
+    go_version:
+      required: false
+      type: string
     secrets:
       NUMARY_GITHUB_TOKEN:
         required: true
@@ -24,7 +27,7 @@ jobs:
       - name: Run GoReleaser
         env:
           GITHUB_TOKEN: ${{ secrets.NUMARY_GITHUB_TOKEN }}
-          FURY_TOKEN: ${{ secrets.FURY_TOKEN   }}
+          FURY_TOKEN: ${{ secrets.FURY_TOKEN }}
         uses: goreleaser/goreleaser-action@v2
         with:
           version: latest
