@@ -1,9 +1,10 @@
 name: GoReleaser Build
 on:
   workflow_call:
-    go_version:
-      required: false
-      type: string
+    inputs:
+      go_version:
+        required: false
+        type: string
 
 jobs:
   build:
