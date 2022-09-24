@@ -38,4 +38,7 @@ jobs:
           NUMARY_STORAGE_DRIVER: "postgres"
           NUMARY_STORAGE_POSTGRES_CONN_STRING: "postgresql://ledger:ledger@127.0.0.1/ledger"
       - name: Upload coverage to Codecov
-        run: bash <(curl -s https://codecov.io/bash)
+        uses: codecov/codecov-action@v3
+        with:
+          fail_ci_if_error: false # optional (default = false)
+          verbose: true # optional (default = false)
