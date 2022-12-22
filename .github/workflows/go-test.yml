@@ -21,6 +21,8 @@ jobs:
     steps:
       - name: Install Task
         uses: arduino/setup-task@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/setup-go@v2
         with:
           go-version: ${{ inputs.go_version }}
