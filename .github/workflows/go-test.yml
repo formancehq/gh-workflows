@@ -2,11 +2,6 @@ name: Build Docker & push to Staging
 
 on:
   workflow_call:
-    inputs:
-      go_version:
-        required: false
-        type: string
-        default: 1.18
     secrets:
       NUMARY_GITHUB_TOKEN:
         required: true
@@ -23,11 +18,11 @@ jobs:
         uses: arduino/setup-task@v1
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: actions/setup-go@v2
+      - uses: actions/setup-go@v3
         with:
-          go-version: ${{ inputs.go_version }}
-      - uses: actions/checkout@v2
-      - uses: actions/cache@v2
+          go-version-file: 'go.mod'
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v3
         with:
           path: |
             ~/.cache/go-build
