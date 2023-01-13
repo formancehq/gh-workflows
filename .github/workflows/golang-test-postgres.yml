@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:15-alpine
+        image: postgres:13-alpine
         env:
           POSTGRES_USER: ledger
           POSTGRES_PASSWORD: ledger
