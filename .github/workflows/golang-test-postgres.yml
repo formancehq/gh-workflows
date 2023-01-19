@@ -1,9 +1,6 @@
 name: Tests - Postgres
 on:
-  workflow_call:
-    secrets:
-      NUMARY_GITHUB_TOKEN:
-        required: true
+  workflow_call
 
 jobs:
   tests-postgres:
